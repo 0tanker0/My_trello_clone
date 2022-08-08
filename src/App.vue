@@ -1,17 +1,22 @@
 <template>
-  <div class='body'>
-    <navigation-bar></navigation-bar>
-  </div>
+  <v-app id="inspire">
 
+    <navigation-bar></navigation-bar>
+
+    <side-bar></side-bar>
+
+  </v-app>
 </template>
 
 <script>
 import navigationBar from "@/components/Navigation-bar";
+import sideBar from "@/components/Side-bar";
 export default {
   name: 'App',
 
   components: {
-    navigationBar
+    navigationBar,
+    sideBar
   },
 
   data: () => ({
