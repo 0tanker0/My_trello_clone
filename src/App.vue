@@ -89,4 +89,7 @@ export default {
 #inspire{
     background-image: url("assets/hello_Purple.jpg");
 }
+v-alert{
+    word-wrap: break-word;
+}
 </style>

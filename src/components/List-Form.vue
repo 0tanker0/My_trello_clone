@@ -61,7 +61,7 @@ export default {
             else{
                 this.createList({
                     title: this.new_list,
-                    id: this.allLists.length,
+                    id: Date.now(),
                     cards: []
                 });
                 this.new_list = '';

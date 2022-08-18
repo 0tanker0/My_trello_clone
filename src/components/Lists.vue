@@ -1,12 +1,30 @@
 <template>
-    <v-card max-width="344" class="mr-5 mt-5">
+    <v-card
+        max-width="344"
+        class="mr-5 mt-5"
+        draggable="true"
+        @dragover.prevent
+        @dragenter.prevent
+        @drop="drop($event, list.id)">
 
         <v-container>
-            <p class="primary white--text"><slot></slot></p>
+            <p class="indigo white--text"><strong><slot></slot></strong></p>
         </v-container>
 
-        <v-divider></v-divider>
+        <v-divider/>
 
+        <!--######CARDS###### -->
+
+        <list-title-item
+            v-for="card in allCards"
+            :key="card.title"
+            :card="card"
+            :listId="list.id"
+            :listTitle="list.title">
+        </list-title-item>
+
+
+        <v-divider/>
         <v-btn
             v-show="!isActive"
             @click="add"
@@ -25,6 +43,9 @@
                     label="Введите текст карточки"
                     v-model="box">
                 </v-text-field>
+
+            <!-- ##########ERROR##########-->
+
             <v-alert
                 v-model="alertIsActive"
                 border="left"
@@ -53,8 +74,10 @@
 
 <script>
 import {mapMutations, mapGetters} from "vuex";
+import listTitleItem from "@/components/List-title-item";
 export default {
     name: "List-obj",
+    components: {listTitleItem},
     data: () => ({
         isActive: false,
         box: '',
@@ -63,9 +86,9 @@ export default {
     props:{
         list: {type: Object}
     },
-    computed: mapGetters(['allLists']),
+    computed: mapGetters(['allLists', "allCards"]),
     methods: {
-        ...mapMutations(["removeList", "updateLists", "createCard"]),
+        ...mapMutations(["removeList", "updateLists", "createCard", 'updateCard', "removeCard"]),
         add () {
             this.isActive === true ? this.isActive = false : this.isActive = true
         },
@@ -73,13 +96,17 @@ export default {
             if (this.box === '') {
                 this.alertIsActive = true
             } else {
-                this.createCard({id: this.allLists.length-1, title: this.box});
+                this.createCard({id: this.list.id, title: this.box, description: '', comments: []});
                 this.box = '';
-                this.updateLists();
             }
         },
         del () {
             this.removeList(this.list.id)
+        },
+        drop: (event, listId) => {
+            const item = event.DataTransfer.getData('itemId');
+            this.removeCard(item);
+            this.createCard({id: listId, title: item.title, description: item.description, comments: item.comments})
         }
     }
 }
@@ -91,5 +118,6 @@ p {
     border: 1px solid darkgray ;
     border-radius: 4px;
     margin: 5px;
+    font-size: 22px;
 }
 </style>
