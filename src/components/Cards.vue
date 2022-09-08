@@ -18,6 +18,8 @@
                 </v-card-actions>
             </v-card-text>
         </v-card>
+
+        <!--######### DESCRIPTION/COMMENTS AREA #########-->
         <div class="text-center">
             <v-dialog
                 v-model="dialog"
@@ -63,7 +65,6 @@
                             dense
                             label="Введите комментарий"
                             height="50"
-                            :value="comm.title"
                             @input="$emit('update:modelValue', $event.target.value)">
                             {{comm.title}}
                         </v-alert>
@@ -95,13 +96,13 @@ export default {
     methods: {
         ...mapMutations(['removeCard', 'updateCard']),
         del() {
-            this.removeCard(this.card.title);
+            this.removeCard(this.card.cardId);
         },
         open() {
             this.dialog === false ? this.dialog = true : this.dialog = false;
         },
         save_description() {
-            this.updateCard({id: this.card.id, title: this.card.title, description: this.description, comments: this.comments});
+            this.updateCard({id: this.card.id, cardId: this.card.cardId, title: this.card.title, description: this.description, comments: this.card.comments});
         },
         dragStart: (event, item) => {
             event.dataTransfer.dropEffect = 'move';

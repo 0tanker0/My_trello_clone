@@ -24,14 +24,14 @@ export default {
       card: {type: Object}
     },
     data: () => ({
-        comment: ''
+        comment: '',
+        comments: []
     }),
     methods:{
         ...mapMutations(['updateCard']),
         save_comment() {
-            let newComments = this.card.comments;
-            newComments = newComments.push({id:Date.now(), title: this.comment})
-            this.updateCard({id: this.card.id, title: this.card.title, description: this.card.description, comment: newComments});
+            this.comments.unshift({id:Date.now(), title: this.comment})
+            this.updateCard({id: this.card.id, cardId: this.card.cardId, title: this.card.title, description: this.card.description, comments: this.comments});
             this.comment = '';
         }
     }

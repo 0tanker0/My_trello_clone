@@ -2,7 +2,6 @@
     <v-card
         max-width="344"
         class="mr-5 mt-5"
-        draggable="true"
         @dragover.prevent
         @dragenter.prevent
         @drop="drop($event, list.id)">
@@ -13,15 +12,19 @@
 
         <v-divider/>
 
-        <!--######CARDS###### -->
+        <!--######### CARDS #########-->
+        <draggable v-model="myLists" group="people" @start="drag=true" @end="drag=false">
+            <list-title-item
+                v-for="card in allCards"
+                :key="card.cardId"
+                :card="card"
+                :listId="list.id"
+                :listTitle="list.title">
+            </list-title-item>
+        </draggable>
 
-        <list-title-item
-            v-for="card in allCards"
-            :key="card.title"
-            :card="card"
-            :listId="list.id"
-            :listTitle="list.title">
-        </list-title-item>
+        <!--######### CARDS-END #########-->
+
 
 
         <v-divider/>
@@ -44,7 +47,7 @@
                     v-model="box">
                 </v-text-field>
 
-            <!-- ##########ERROR##########-->
+            <!--########## ERROR ##########-->
 
             <v-alert
                 v-model="alertIsActive"
@@ -74,10 +77,11 @@
 
 <script>
 import {mapMutations, mapGetters} from "vuex";
-import listTitleItem from "@/components/List-title-item";
+import listTitleItem from "@/components/Cards";
+import draggable from 'vuedraggable'
 export default {
     name: "List-obj",
-    components: {listTitleItem},
+    components: {listTitleItem, draggable},
     data: () => ({
         isActive: false,
         box: '',
@@ -86,7 +90,15 @@ export default {
     props:{
         list: {type: Object}
     },
-    computed: mapGetters(['allLists', "allCards"]),
+    computed:{ ...mapGetters(['allLists', "allCards"]),
+        myList: {
+            get() {
+                return this.allLists
+            },
+            set(value) {
+                this.$store.commit('updateList', value)
+            }
+        }},
     methods: {
         ...mapMutations(["removeList", "updateLists", "createCard", 'updateCard', "removeCard"]),
         add () {
@@ -96,7 +108,7 @@ export default {
             if (this.box === '') {
                 this.alertIsActive = true
             } else {
-                this.createCard({id: this.list.id, title: this.box, description: '', comments: []});
+                this.createCard({id: this.list.id, cardId: Date.now(), title: this.box, description: '', comments: []});
                 this.box = '';
             }
         },
@@ -105,8 +117,7 @@ export default {
         },
         drop: (event, listId) => {
             const item = event.DataTransfer.getData('itemId');
-            this.removeCard(item);
-            this.createCard({id: listId, title: item.title, description: item.description, comments: item.comments})
+            this.updateCard({id: listId, cardId: item.cardId, title: item.title, description: item.description, comments: item.comments})
         }
     }
 }

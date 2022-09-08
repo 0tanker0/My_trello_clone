@@ -12,28 +12,34 @@ export default{
         }
     },
     mutations: {
-        updateLists (state) {
-            state.cards.map(function (x) {state.lists[x.id].unshift(x)});
-            state.cards = [];
+        updateLists (state, card) {
+            state.lists = state.lists.map( (l) => {
+                if (l.id === card.id){
+                    return l
+                }
+            })
         },
         createList (state, newList) {
             state.lists.push(newList)
         },
         removeList (state, extraList){
-            state.cards =  state.cards.filter(x => { return x.id !== extraList})
+            state.cards =  state.cards.filter(x => { return x.cardId !== extraList})
             state.lists = state.lists.filter(function (f) {return f.id !== extraList})
         },
-        createCard (state, newList) {
-            state.cards.push(newList)
+        createCard (state, newCard) {
+            state.cards.push(newCard)
         },
         removeCard (state, extraCard) {
-            state.cards = state.cards.filter(x => {return x.title !== extraCard})
+            state.cards = state.cards.filter(x => {return x.cardId !== extraCard})
         },
-        updateCard (state, card) {
-            state.cards = state.cards.map((x) => {
-                x.title === card.title ? { ...x, id: card.id } : x
+        updateCard (state, card)  {
+            state.cards = state.cards.map( (c) => {
+                if (c.cardId === card.cardId) {
+                    c = card
+                }
+                return c
             })
-        },
+        }
     },
     actions: {
         addNewLists(ctx, lists){

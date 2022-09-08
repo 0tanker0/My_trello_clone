@@ -1,24 +1,31 @@
 <template>
     <v-app id="inspire">
 
+        <!--######### NAVIGATION BAR #########-->
         <navigation-bar></navigation-bar>
 
         <v-main>
             <v-row>
                 <v-col cols="2">
+                    <!--######### SIDEBAR #########-->
                     <v-navigation-drawer>
                         <side-bar></side-bar>
                     </v-navigation-drawer>
                 </v-col>
+
                 <v-col>
                     <v-container>
                         <v-row>
+                            <!-- ######### LIST-FORM #########-->
                             <list-form></list-form>
-                                <lists v-for="list in allLists"
-                                       :key="list.id"
-                                       class="mt-3"
-                                       :list="list"
+                            <!-- ######### LISTS #########-->
+                                <lists
+                                    v-for="list in allLists"
+                                    :key="list.id"
+                                    class="mt-3"
+                                    :list="list"
                                 >{{list.title}}</lists>
+
                         </v-row>
 
                     </v-container>
@@ -69,7 +76,7 @@ export default {
         Lists,
         navigationBar,
         sideBar,
-        listForm
+        listForm,
     },
     computed: mapGetters(['allLists']),
     data: () => ({
